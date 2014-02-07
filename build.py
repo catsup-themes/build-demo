@@ -110,8 +110,9 @@ sh.rm('-rf',
     os.path.join(repo_dir, 'index.html'), os.path.join(repo_dir, 'demo'))
 sh.cp('demo/index.html', os.path.join(repo_dir, 'index.html'))
 sh.cp('-r', 'demo/', os.path.join(repo_dir, 'demo'))
-sh.git('add', '*')
-sh.git('commit', '-am', 'update %s' % time)
-sh.git('push')
+sh.cd(repo_dir)
+sh.git.add('*')
+sh.git.commit('-am', 'update %s' % time)
+sh.git.push()
 
 print u'复制完毕；停止工作。'
