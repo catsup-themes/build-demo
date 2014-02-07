@@ -4,9 +4,12 @@
 import os
 import sys
 import sh
+import jinja2
+import time
 
 config = 'config.json'
 config_original = 'config.json.original'
+index = 'index.html'
 
 assert os.path.isdir('catsup')
 assert os.path.isdir('posts')
@@ -19,30 +22,43 @@ if (len(sys.argv) > 1) and \
     ((sys.argv[1] == '--not-install') or (sys.argv[1] == '-n')):
         pass
 else:
+    print u'开始安装 Catsup。'
+
     try:
         sh.cd('catsup')
         sh.python('setup.py', 'install')
-        version = sh.catsup(version=True).replace(os.linesep, '')
-        print u'Catsup 安装成功。当前版本：%s' % version
     except sh.ErrorReturnCode_1, message:
         print u'在安装 catsup 的时候发生了错误：'
         print message
 
     sh.cd(pwd)
+version = sh.catsup(version=True).replace(os.linesep, '')
+print u'当前 Catsup 版本：%s' % version
 
 ## 获取主题列表 ##
 ignore_dirs = ('catsup', 'posts', 'themes', 'demo', '.catsup-cache', '.git')
 templates_list = []
+templates_name_list = []
 
 for one in os.listdir('.'):
     if os.path.isdir(one) and not one in ignore_dirs:
         templates_list.append(one)
 
+for template in templates_list:
+    if template.startswith('catsup-theme-'):
+        templates_name_list.append(
+            (template, template[len('catsup-theme-'):])
+        )
+    else:
+        templates_name_list.append(
+            (template, template)
+        )
+
+
 ## 开始生成 ##
-for theme_path in templates_list:
-    if theme_path.startswith('catsup-theme-'):
-        theme_name = theme_path[len('catsup-theme-'):]
-    else:   theme_name = theme_path
+for theme in templates_name_list:
+    theme_path = theme[0]
+    theme_name = theme[1]
 
     print u'开始为主题 %s 生成 Demo 页面。' % theme_name
 
@@ -69,4 +85,15 @@ for theme_path in templates_list:
     ## 生成 Demo ##
     sh.catsup('install', theme_name)
     sh.catsup('build')
-    
+
+## 生成 demo/index.html ##
+print u'开始生成主页。'
+
+index_template = jinja2.Template(open(index).read())
+index_template.render(
+    templates=templates_name_list,
+    time=time.time(),
+    version=version
+)
+
+print u'生成完毕，停止工作。'
