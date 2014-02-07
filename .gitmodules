@@ -1,0 +1,9 @@
+[submodule "catsup"]
+	path = catsup
+	url = https://github.com/whtsky/catsup
+[submodule "catsup-theme-clean"]
+	path = catsup-theme-clean
+	url = https://github.com/whtsky/catsup-theme-clean
+[submodule "catsup-theme-sealscript"]
+	path = catsup-theme-sealscript
+	url = https://github.com/whtsky/catsup-theme-sealscript
