@@ -90,10 +90,14 @@ for theme in templates_name_list:
 print u'开始生成主页。'
 
 index_template = jinja2.Template(open(index).read())
-index_template.render(
-    templates=templates_name_list,
-    time=time.time(),
-    version=version
-)
+
+if not os.path.isdir('demo'):   os.mkdir('demo')
+
+with open('demo' + os.sep + index, 'w') as f:
+    f.write(index_template.render(
+        templates=templates_name_list,
+        time=time.time(),
+        version=version ))
+    f.close()
 
 print u'生成完毕，停止工作。'
