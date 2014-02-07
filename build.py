@@ -10,6 +10,7 @@ import time
 config = 'config.json'
 config_original = 'config.json.original'
 index = 'index.html'
+repo_dir = '../catsup-themes.github.io/'
 
 assert os.path.isdir('catsup')
 assert os.path.isdir('posts')
@@ -86,6 +87,8 @@ for theme in templates_name_list:
     sh.catsup('install', theme_name)
     sh.catsup('build')
 
+time = time.time()
+
 ## 生成 demo/index.html ##
 print u'开始生成主页。'
 
@@ -96,8 +99,19 @@ if not os.path.isdir('demo'):   os.mkdir('demo')
 with open('demo' + os.sep + index, 'w') as f:
     f.write(index_template.render(
         templates=templates_name_list,
-        time=time.time(),
+        time=time,
         version=version ))
     f.close()
 
-print u'生成完毕，停止工作。'
+## 复制文件到 repo 内并上传 ##
+print u'生成完毕；开始复制文件。'
+
+sh.rm('-rf',
+    os.path.join(repo_dir, 'index.html'), os.path.join(repo_dir, 'demo'))
+sh.cp('demo/index.html', os.path.join(repo_dir, 'index.html'))
+sh.cp('-r', 'demo/', os.path.join(repo_dir, 'demo'))
+sh.git('add', '*')
+sh.git('commit', '-am', 'update %s' % time)
+sh.git('push')
+
+print u'复制完毕；停止工作。'
