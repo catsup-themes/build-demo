@@ -2,7 +2,7 @@
     "site": {
         "name": "%(name)s - Demo",
         "description": "Demo for catsup theme %(name)s",
-        "url": "http://catsup-themes.github.io/"
+        "url": "http://catsup-themes.github.io/demo/%(name)s/"
     },
 
     "author": {
@@ -14,18 +14,18 @@
     "config": {
         "source": "posts",
         "output": "demo/%(name)s",
-        "static_prefix": "/static/",
+        "static_prefix": "demo/%(name)s/static/",
         "analytics": ""
     },
 
     "permalink": {
-        "page": "/page/{page}/",
-        "post": "/{title}/",
-        "tag": "/tag/{name}/",
-        "tags": "/tag/index.html",
-        "archive": "/archive/{year}/",
-        "archives": "/archive/index.html",
-        "feed": "/feed.xml"
+        "page": "demo/%(name)s/page/{page}/",
+        "post": "demo/%(name)s/{title}/",
+        "tag": "demo/%(name)s/tag/{name}/",
+        "tags": "demo/%(name)s/tag/index.html",
+        "archive": "demo/%(name)s/archive/{year}/",
+        "archives": "demo/%(name)s/archive/index.html",
+        "feed": "demo/%(name)s/feed.xml"
     },
 
     "comment": {
