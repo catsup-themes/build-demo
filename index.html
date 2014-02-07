@@ -5,8 +5,14 @@
     <title>A Demo Site That For Catsup Themes.</title>
     <meta charset="utf-8" />
     <style>
-    
+        #container {
+            width:100%;
+            max-width:500px;
+            margin:0 auto;
+        }
     </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="oyiadin">
 </head>
 <body>
     <div id="container">
@@ -14,7 +20,7 @@
         <ul>
             {% for one in templates %}
             <li>
-                <a href="/demo/{{ one }}" title="demo of {{ one }}">{{ one }}</a>
+                <a href="/demo/{{ one[1] }}" title="demo of {{ one[1] }}">{{ one[1] }}</a>
             </li>
             {% endfor %}
         </ul>
