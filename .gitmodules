@@ -7,3 +7,9 @@
 [submodule "catsup-theme-sealscript"]
 	path = catsup-theme-sealscript
 	url = https://github.com/whtsky/catsup-theme-sealscript
+[submodule "catsup-theme-brief"]
+	path = catsup-theme-brief
+	url = https://github.com/JmPotato/catsup-theme-brief.git
+[submodule "catsup-theme-CHO"]
+	path = catsup-theme-CHO
+	url = https://github.com/oranzhang/catsup-theme-CHO.git
