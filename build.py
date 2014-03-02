@@ -14,6 +14,8 @@ repo_dir = '../catsup-themes.github.io/'
 
 assert os.path.isdir('catsup')
 assert os.path.isdir('posts')
+assert not os.path.isdir('deploy')
+assert not os.path.isdir('demo')
 assert os.path.isfile(config_original)
 
 ## 安装 catsup ##
@@ -37,7 +39,7 @@ version = sh.catsup(version=True).replace(os.linesep, '')
 print u'当前 Catsup 版本：%s' % version
 
 ## 获取主题列表 ##
-ignore_dirs = ('catsup', 'posts', 'themes', 'demo', '.catsup-cache', '.git')
+ignore_dirs = ('catsup', 'posts', 'themes', 'demo', 'deploy', '.catsup-cache', '.git')
 templates_list = []
 templates_name_list = []
 
@@ -48,11 +50,11 @@ for one in os.listdir('.'):
 for template in templates_list:
     if template.startswith('catsup-theme-'):
         templates_name_list.append(
-            (template, template[len('catsup-theme-'):])
+            [template, template[len('catsup-theme-'):]]
         )
     else:
         templates_name_list.append(
-            (template, template)
+            [template, template]
         )
 
 
@@ -60,8 +62,6 @@ for template in templates_list:
 for theme in templates_name_list:
     theme_path = theme[0]
     theme_name = theme[1]
-
-    print u'开始为主题 %s 生成 Demo 页面。' % theme_name
 
     ## 生成配置文件 ##
     if os.path.isfile(config):
@@ -83,9 +83,22 @@ for theme in templates_name_list:
         f.write(data)
         f.close()
 
+    print u'开始为主题 %s 生成 Demo 页面。' % theme_vars['name']
+
     ## 生成 Demo ##
     sh.catsup('install', theme_name)
     sh.catsup('build')
+
+    if os.path.isdir('deploy') and \
+        os.path.isdir(os.path.join('deploy', 'static')):
+            sh.mv('deploy/static/',
+                os.path.join('demo', theme_vars['name'], 'static'))
+
+    theme[1] = theme_vars['name']
+
+if os.path.isdir('deploy'):
+    sh.rm('-rf', 'deploy')
+sh.rm('-f', config)
 
 time = time.time()
 
@@ -94,8 +107,6 @@ print u'开始生成主页。'
 
 index_template = jinja2.Template(open(index).read())
 
-if not os.path.isdir('demo'):   os.mkdir('demo')
-
 with open('demo' + os.sep + index, 'w') as f:
     f.write(index_template.render(
         templates=templates_name_list,
@@ -103,16 +114,17 @@ with open('demo' + os.sep + index, 'w') as f:
         version=version ))
     f.close()
 
-## 复制文件到 repo 内并上传 ##
+## 复制文件到 repo 内 ##
 print u'生成完毕；开始复制文件。'
 
 sh.rm('-rf',
     os.path.join(repo_dir, 'index.html'), os.path.join(repo_dir, 'demo'))
 sh.cp('demo/index.html', os.path.join(repo_dir, 'index.html'))
-sh.cp('-r', 'demo/', os.path.join(repo_dir, 'demo'))
+sh.mv('demo/', repo_dir)
+sh.rm('-rf', 'demo')
 sh.cd(repo_dir)
 sh.git.add('*')
 sh.git.commit('-am', 'update %s' % time)
-sh.git.push()
 
-print u'复制完毕；停止工作。'
+print u'复制完毕；请自行去目标仓库执行 git push。'
+print u'停止工作。'

@@ -19,13 +19,13 @@
     },
 
     "permalink": {
-        "page": "demo/%(name)s/page/{page}/",
-        "post": "demo/%(name)s/{title}/",
-        "tag": "demo/%(name)s/tag/{name}/",
-        "tags": "demo/%(name)s/tag/index.html",
-        "archive": "demo/%(name)s/archive/{year}/",
-        "archives": "demo/%(name)s/archive/index.html",
-        "feed": "demo/%(name)s/feed.xml"
+        "page": "page/{page}/",
+        "post": "{title}/",
+        "tag": "tag/{name}/",
+        "tags": "tag/index.html",
+        "archive": "archive/{year}/",
+        "archives": "archive/index.html",
+        "feed": "feed.xml"
     },
 
     "comment": {
